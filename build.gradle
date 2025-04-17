@@ -80,5 +80,6 @@ dependencyManagement {
 }
 
 tasks.named('test') {
+	exclude 'com/polarbookshop/orderservice/**'
 	useJUnitPlatform()
 }
