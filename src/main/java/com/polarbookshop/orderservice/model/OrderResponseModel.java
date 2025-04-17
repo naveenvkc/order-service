@@ -17,5 +17,6 @@ public class OrderResponseModel {
     private List<OrderResponse> data;
 
     @JsonProperty("notifications")
+    @Builder.Default
     private List<NotificationResponse> notifications = null;
 }

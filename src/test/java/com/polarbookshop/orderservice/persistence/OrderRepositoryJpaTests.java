@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 //        "spring.datasource.password=password"
 //})
 @Import(DataConfig.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 //@ActiveProfiles("integration")
 @Testcontainers
 public class OrderRepositoryJpaTests {

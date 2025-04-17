@@ -17,6 +17,7 @@ public class AddBookResponseModel {
     private final BookResponseModel data;
 
     @JsonProperty("notifications")
+    @Builder.Default
     private List<NotificationResponse> notifications = null;
 
 }
