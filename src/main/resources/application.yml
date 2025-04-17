@@ -15,6 +15,10 @@ spring:
     username: user
     password: password
     url: jdbc:postgresql://localhost:5432/polardb_order?currentSchema=polar_bookshop
+  flyway:
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: jdbc:postgresql://localhost:5432/polardb_order?currentSchema=polar_bookshop
     hikari:
       connection-timeout: 2000 #ms
       maximum-pool-size: 5
