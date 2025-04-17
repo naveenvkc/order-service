@@ -1,0 +1,29 @@
+server:
+  port: 9002
+  shutdown: graceful
+  netty:
+    connection-timeout: 2s
+    idle-timeout: 15s
+
+
+spring:
+  application:
+    name: order-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+  datasource:
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:5432/polardb_order?currentSchema=polar_bookshop
+    hikari:
+      connection-timeout: 2000 #ms
+      maximum-pool-size: 5
+
+polar:
+  catalog-service-uri: "http://localhost:9001"
+
+openapi:
+  oAuthFlow:
+    tokenUrl: http://localhost:9000/realms/Microservices-demo-realm/protocol/openid-connect/token
+  order:
+    base-path: /api/v1
