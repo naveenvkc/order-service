@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Import;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
+@Testcontainers
 class OrderServiceApplicationTests {
 
 	@Test
