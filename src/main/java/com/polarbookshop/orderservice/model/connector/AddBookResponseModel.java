@@ -9,12 +9,12 @@ import java.util.List;
 @Data
 @Generated
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Builder
 public class AddBookResponseModel {
 
     @JsonProperty("data")
-    private BookResponseModel data;
+    private final BookResponseModel data;
 
     @JsonProperty("notifications")
     private List<NotificationResponse> notifications = null;

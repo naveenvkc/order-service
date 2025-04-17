@@ -87,7 +87,7 @@ public class WebClientUtil {
     }
 
     private static Mono<AddBookResponseModel> build4xxNotification(){
-        return Mono.just(AddBookResponseModel.builder().notifications(
+        return Mono.just(AddBookResponseModel.builder().data(null).notifications(
                 List.of(NotificationResponse.builder().code("4xx").build())).build());
     }
 }

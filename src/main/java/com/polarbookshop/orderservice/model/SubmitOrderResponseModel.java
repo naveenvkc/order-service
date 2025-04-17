@@ -10,13 +10,13 @@ import java.util.Optional;
 @Data
 @Generated
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Builder
 public class SubmitOrderResponseModel {
 
     @JsonProperty("data")
-    private OrderResponse data;
+    private final OrderResponse data;
 
     @JsonProperty("notifications")
-    private List<NotificationResponse> notifications = null;
+    private final List<NotificationResponse> notifications = null;
 }
