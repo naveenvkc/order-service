@@ -10,10 +10,13 @@ import com.polarbookshop.orderservice.model.OrderRequest;
 import com.polarbookshop.orderservice.model.OrderResponse;
 import com.polarbookshop.orderservice.model.SubmitOrderResponseModel;
 import com.polarbookshop.orderservice.model.connector.AddBookResponseModel;
+import com.polarbookshop.orderservice.model.event.OrderAcceptedMessage;
 import com.polarbookshop.orderservice.persistence.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 
@@ -23,14 +26,17 @@ public class SubmitOrderOperation implements IOperation<RestConsumerRequest<Orde
 
     private final OrderRepository orderRepository;
     private final BookClient bookClient;
+    private final StreamBridge streamBridge;
 
     public SubmitOrderOperation(OrderRepository orderRepository,
-                                BookClient bookClient) {
+                                BookClient bookClient, StreamBridge streamBridge) {
         this.orderRepository = orderRepository;
         this.bookClient = bookClient;
+        this.streamBridge = streamBridge;
     }
 
     @Override
+    @Transactional
     public SubmitOrderResponseModel handle(RestConsumerRequest<OrderRequest> consumerRequest) {
         LOG.info("Entered SubmitOrderResponseModel.handle Operation");
         return prepareConsumerResponse(consumerRequest);
@@ -54,6 +60,7 @@ public class SubmitOrderOperation implements IOperation<RestConsumerRequest<Orde
         if (!ObjectUtils.isEmpty(bookResponse) && !ObjectUtils.isEmpty(bookResponse.getData())){
             orderEntity =
                     orderRepository.save(buildAcceptedOrder(bookResponse, consumerRequest.getQuantity()));
+            publishOrderAcceptedEvent(orderEntity);
         }else {
             if(!ObjectUtils.isEmpty(bookResponse) && !ObjectUtils.isEmpty(bookResponse.getNotifications()) && !bookResponse.getNotifications().isEmpty()){
                 orderEntity = orderRepository.save(buildPendingOrder(consumerRequest));
@@ -92,5 +99,17 @@ public class SubmitOrderOperation implements IOperation<RestConsumerRequest<Orde
     public static OrderEntity buildPendingOrder(OrderRequest request){
         return OrderEntity.of( request.getIsbn(), null, null, request.getQuantity(),
                 OrderStatus.PENDING.getStatus());
+    }
+
+    private void publishOrderAcceptedEvent(OrderEntity order) {
+        if (!order.getStatus().equals(OrderStatus.ACCEPTED.getStatus())) {
+            return;
+        }
+        var orderAcceptedMessage =
+                new OrderAcceptedMessage(order.getId());
+        LOG.info("Sending order accepted event with id: {}", order.getId());
+        var result = streamBridge.send("acceptOrder-out-0",
+                                                        orderAcceptedMessage);
+        LOG.info("Result of sending data for order with id {}: {}", order.getId(), result);
     }
 }

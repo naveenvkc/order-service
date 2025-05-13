@@ -1,5 +1,6 @@
 package com.polarbookshop.orderservice.consumer;
 
+import com.polarbookshop.orderservice.model.GetOrdersRequest;
 import com.polarbookshop.orderservice.model.OrderRequest;
 import com.polarbookshop.orderservice.model.OrderResponseModel;
 import com.polarbookshop.orderservice.model.SubmitOrderResponseModel;
@@ -28,7 +29,7 @@ public class OrderRequestDelegate {
         this.submitOrderOperation = submitOrderOperation;
     }
 
-    public ResponseEntity<OrderResponseModel> getAllOrders(RestConsumerRequest<Void> consumerRequest) {
+    public ResponseEntity<OrderResponseModel> getAllOrders(RestConsumerRequest<GetOrdersRequest> consumerRequest) {
         return ResponseEntity.status(HttpStatus.OK).headers(getResponseHeaders())
                 .body(getAllOrdersOperation.handle(consumerRequest));
     }

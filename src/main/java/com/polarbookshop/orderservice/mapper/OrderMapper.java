@@ -21,6 +21,8 @@ public class OrderMapper {
                 .price(entity.getBookPrice())
                 .status(OrderStatus.fromValue(entity.getStatus()))
                 .createdDate(entity.getCreatedDate())
+                .createdBy(entity.getCreatedBy())
+                .modifiedBy(entity.getLastModifiedBy())
                 .build();
     }
 

@@ -1,9 +1,6 @@
 package com.polarbookshop.orderservice.consumer;
 
-import com.polarbookshop.orderservice.model.EmptyDataResponse;
-import com.polarbookshop.orderservice.model.OrderRequest;
-import com.polarbookshop.orderservice.model.OrderResponseModel;
-import com.polarbookshop.orderservice.model.SubmitOrderResponseModel;
+import com.polarbookshop.orderservice.model.*;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,6 +10,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +41,8 @@ public interface OrderControllerInterface {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(implementation = EmptyDataResponse.class))})
     })
     @RequestMapping(value = "/orders", produces = {"application/json"}, method = RequestMethod.GET)
-    default ResponseEntity<OrderResponseModel> getAllOrders(){
+    @PreAuthorize("hasAnyRole('employee', 'customer')")
+    default ResponseEntity<OrderResponseModel> getAllOrders(@AuthenticationPrincipal Jwt jwt){
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -58,6 +59,7 @@ public interface OrderControllerInterface {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(implementation = EmptyDataResponse.class))})
     })
     @RequestMapping(value = "/orders", produces = {"application/json"}, consumes = {"application/json"}, method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('employee', 'customer')")
     default ResponseEntity<SubmitOrderResponseModel> submitOrder(@Valid @RequestBody OrderRequest consumerRequest) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

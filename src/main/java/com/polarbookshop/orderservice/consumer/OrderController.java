@@ -1,10 +1,13 @@
 package com.polarbookshop.orderservice.consumer;
 
+import com.polarbookshop.orderservice.model.GetOrdersRequest;
 import com.polarbookshop.orderservice.model.OrderRequest;
 import com.polarbookshop.orderservice.model.OrderResponseModel;
 import com.polarbookshop.orderservice.model.SubmitOrderResponseModel;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +23,14 @@ public class OrderController implements OrderControllerInterface{
     }
 
     @Override
-    public ResponseEntity<OrderResponseModel> getAllOrders(){
-        RestConsumerRequest<Void> restRequest = RestConsumerRequest.<Void>builder().build();
+    public ResponseEntity<OrderResponseModel> getAllOrders(@AuthenticationPrincipal Jwt jwt){
+        System.out.println("username::" + jwt.getClaimAsString("preferred_username"));
+        System.out.println("sub::" + jwt.getSubject());
+        GetOrdersRequest getOrderRequest =
+                GetOrdersRequest.builder().username(jwt.getClaimAsString("preferred_username")).build();
+        RestConsumerRequest<GetOrdersRequest> restRequest = RestConsumerRequest.<GetOrdersRequest>builder()
+                                                                .request(getOrderRequest)
+                                                                .build();
         return this.delegate.getAllOrders(restRequest);
     }
 

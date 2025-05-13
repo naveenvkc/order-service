@@ -35,6 +35,12 @@ public class OrderResponse {
     @JsonProperty("created_date")
     private Instant createdDate;
 
+    @JsonProperty("created_by")
+    private String createdBy;
+
+    @JsonProperty("modified_by")
+    private String modifiedBy;
+
     public static OrderResponse buildExample() {
         OrderResponse responseObject = new OrderResponse();
         responseObject.setId(1L);
@@ -43,6 +49,8 @@ public class OrderResponse {
         responseObject.setQuantity(2);
         responseObject.setStatus(OrderStatus.ACCEPTED);
         responseObject.setCreatedDate(Instant.now());
+        responseObject.setCreatedBy("testuser");
+        responseObject.setModifiedBy("testuser");
         return responseObject;
     }
 }
