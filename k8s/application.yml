@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://polar-postgres/polardb_order?currentSchema=polar_bookshop
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://polar-keycloak/realms/PolarBookshop
+  rabbitmq:
+    host: polar-rabbitmq
+
+polar:
+  catalog-service-uri: http://catalog-service

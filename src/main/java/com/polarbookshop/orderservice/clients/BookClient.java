@@ -18,6 +18,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
+import static com.polarbookshop.orderservice.common.Constants.CORRELATION_ID_HEADER;
+import static com.polarbookshop.orderservice.common.Constants.CORRELATION_ID_KEY;
+
 @Component
 public class BookClient {
     private static final String BOOKS_ROOT_API = "/api/v1/books/";
@@ -35,6 +38,7 @@ public class BookClient {
                 .headers(h -> {
                     h.set(Constants.X_B3_TRACEID, "1234");
                     h.set(Constants.X_B3_SPANID, "1234");
+                    h.set(CORRELATION_ID_HEADER, MDC.get(CORRELATION_ID_KEY));
                 })
                 .retrieve()
 //                .onStatus(HttpStatusCode::isError, WebClientUtil.logWebClientError(

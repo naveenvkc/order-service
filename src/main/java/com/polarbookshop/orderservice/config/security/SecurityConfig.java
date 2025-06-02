@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(customizer -> customizer.requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/swagger-ui/index.html"),
                                 AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
-                                AntPathRequestMatcher.antMatcher("/v3/api-docs/**")
+                                AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
+                                AntPathRequestMatcher.antMatcher("/actuator/**")
                 ).permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(customizer ->
